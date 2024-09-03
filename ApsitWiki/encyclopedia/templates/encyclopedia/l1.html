@@ -1,0 +1,69 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <style>
+        body {
+            background-image:url("https://wallpapers.com/images/hd/faded-background-chi2uxjo9a9sh78y.jpg");
+            background-repeat: repeat;
+            background-size: cover;
+        }
+        form {
+            background-color: rgba(255, 253, 253);
+            padding-left: 10px;
+            border-radius: 5px;
+        }
+        .highlight {
+            background-color: yellow;
+        }
+    </style>
+    <script src="\c:\Users\dhruv mahyavanshi\Downloads\APSITwiki\encyclopedia\static\encyclopedia\script.js"></script>
+    <title>APSIT WIKI </title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="{% static 'encyclopedia/styles.css' %}" rel="stylesheet">
+
+</head>
+<body>
+    
+    <div class="row">
+        <div class="sidebar col-lg-2 col-md-3" style="text-align: center;">
+
+            <h2>APSITWiki</h2>
+            
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYsx6WoypIuJoygnCqW1l8K0qomFosfXW25RGzxhNYbw&s" alt="APSIT" width="100" height="100">
+
+            <br></br>
+            
+            <div >
+                <a href="{% url 'index' %}">Home</a>
+            </div>
+            <div>
+                <a href="{% url 'random' %}">Random Page</a>
+            </div>
+            <div>
+                {% comment %} <a href="{% url 'login' %}">Log Out</a> {% endcomment %}
+            </div>
+            {% block nav %}
+            {% endblock %}
+        </div>
+    
+    <div class="main col-lg-10 col-md-9">
+            <div class="main col-lg-10 col-md-9"></div>
+                <form method="POST" action="/search">
+                {% csrf_token %}
+                <h1>Search for notes</h1>
+                <input class="search" type="text" name="q" placeholder="Search wiki"padding=15px>
+                </form>
+                <form>
+                {% block body %}
+                {% endblock %}
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+
+</body>
+</html>

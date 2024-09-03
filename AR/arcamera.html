@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AR Navigation</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar-nft.js"></script>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        #hud {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 10; /* Ensure the HUD is on top */
+        }
+    </style>
+</head>
+<body>
+    <div id="hud">
+        <label for="room-select">Select Room:</label>
+        <select id="room-select">
+            <option value="18.9576799,72.8097855">Room 1</option>
+            <option value="18.9586799,72.8097855">Room 2</option>
+            <option value="18.9596799,72.8097855">Room 3</option>
+        </select>
+    </div>
+
+    <a-scene embedded arjs='sourceType: webcam;'>
+        <a-camera position="0 0 0" look-controls></a-camera>
+        <!-- Arrow -->
+        <a-cone id="arrow" radius-bottom="0.08" height="0.4" color="red" position="0 0 -5" rotation="0 0 0"></a-cone>
+        
+        <!-- Background Plane for HUD -->
+        <a-plane position="0 1.6 -2" width="1.5" height="0.4" color="#FFFFFF" opacity="0.8"></a-plane>
+    </a-scene>
+
+    <script>
+        const rooms = [
+            { name: 'Room 1', lat: 18.9576799, lng: 72.8097855 },
+            { name: 'Room 2', lat: 18.9586799, lng: 72.8097855 },
+            { name: 'Room 3', lat: 18.9596799, lng: 72.8097855 }
+        ];
+
+        let destination = new THREE.Vector3();
+
+        function updateDestination(lat, lng) {
+            navigator.geolocation.getCurrentPosition(position => {
+                const { latitude, longitude } = position.coords;
+                destination = latLngToVector3(lat, lng, latitude, longitude);
+            }, showError);
+        }
+
+        function showError(error) {
+            console.error('Geolocation error:', error);
+        }
+
+        function latLngToVector3(latDest, lngDest, latOrigin, lngOrigin) {
+            const earthRadius = 6371; // Earth's radius in kilometers
+
+            const latDiff = THREE.MathUtils.degToRad(latDest - latOrigin);
+            const lngDiff = THREE.MathUtils.degToRad(lngDest - lngOrigin);
+
+            const a = Math.sin(latDiff / 2) * Math.sin(latDiff / 2) +
+                      Math.cos(THREE.MathUtils.degToRad(latOrigin)) * Math.cos(THREE.MathUtils.degToRad(latDest)) *
+                      Math.sin(lngDiff / 2) * Math.sin(lngDiff / 2);
+
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+            const distance = earthRadius * c; // Distance in kilometers
+
+            const x = distance * Math.cos(lngDiff);
+            const y = 0;
+            const z = distance * Math.sin(lngDiff);
+
+            return new THREE.Vector3(x, y, z);
+        }
+
+        document.getElementById('room-select').addEventListener('change', (event) => {
+            const [lat, lng] = event.target.value.split(',').map(Number);
+            updateDestination(lat, lng);
+        });
+
+        AFRAME.registerComponent('arrow-behavior', {
+            tick: function () {
+                const camera = document.querySelector('[camera]');
+                const arrow = document.querySelector('#arrow');
+
+                if (camera && arrow && destination) {
+                    // Ensure the arrow is always at a little distance in front of the camera
+                    const cameraWorldPosition = new THREE.Vector3();
+                    camera.object3D.getWorldPosition(cameraWorldPosition);
+
+                    const direction = new THREE.Vector3();
+                    direction.subVectors(destination, cameraWorldPosition).normalize();
+
+                    const arrowDirection = new THREE.Vector3(0, 0, -1);
+                    const rotationQuaternion = new THREE.Quaternion().setFromUnitVectors(arrowDirection, direction);
+
+                    arrow.object3D.position.set(0, 0, -5).applyMatrix4(camera.object3D.matrixWorld);
+                    arrow.object3D.setRotationFromQuaternion(rotationQuaternion);
+                }
+            }
+        });
+
+        document.querySelector('#arrow').setAttribute('arrow-behavior', '');
+
+        // Check for AR.js Errors
+        window.addEventListener('error', function(event) {
+            console.error('Error occurred:', event.error);
+        });
+
+        // Add camera permission error handling
+        navigator.permissions.query({ name: 'camera' }).then(function(permissionStatus) {
+            if (permissionStatus.state !== 'granted') {
+                alert('Camera permission is required for this application to work.');
+            }
+        });
+    </script>
+</body>
+</html>

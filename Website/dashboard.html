@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR-APSIT.ai</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="auth.js" defer type="module"></script>
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <a href="dashboard.html" target="_blank">
+                <img src="apsit.png" alt="ailogo" style="cursor: pointer;">
+            </a>
+        </div>
+        <nav>
+            <ul class="nav">
+                <li>Solutions
+                    <ul type="none">
+                        <li><a href="#">Overview</a></li>
+                        <li><a href="#">IndoorMaps</a></li>
+                    </ul>
+                </li>
+                <li>Resources
+                    <ul type="none">
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Community</a></li>
+                        <li><a href="#">Tutorials</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" id="profile-btn">Are you from APSIT?</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <button id="close-btn">&times;</button>
+            <div class="profile-info">
+                <img src="profileicon.png" alt="Profile" class="profile-img">
+                <p id="user-info"></p>
+            </div>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="signin.html">Signout</a></li>
+        </ul>
+    </div>
+
+    <section class="section1">
+        <h1>AR APSIT</h1>
+        <h2>AR NAVIGATION SYSTEM</h2>
+        <a href="#" class="button" onclick="scrollToFeatures()">Get Started</a>
+    </section>
+
+    <section class="section2" id="features">
+        <h2>Our Features</h2>
+        <p>
+            AR-APSIT.ai offers a wide range of features to enhance your indoor experience.
+        </p>
+        <div class="container">
+            <a href="http://127.0.0.1:8000/" target="_blank" class="feature-block" style="display: none;">
+                <div class="feature-image">
+                    <img src="bookicon.png" alt="apsitwiki">
+                </div>
+                <div class="feature-details">
+                    <h3>APSIT-WIKI</h3>
+                    <p>APSITwiki is an online platform dedicated to providing comprehensive academic resources for students of APSIT.</p>
+                </div>
+            </a>
+
+            <a href="https://didfu.github.io" target="_blank" class="feature-block">
+                <div class="feature-image">
+                    <img src="ar.png" alt="ar">
+                </div>
+                <div class="feature-details">
+                    <h3>AR NAVIGATION</h3>
+                    <p>The AR Navigation System is a web-based application designed to enhance navigation and educational engagement within college premises.</p>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <section class="chatbot" onclick="toggleChatbot()">
+        <img src="chatbot.png" alt="chatbot" />
+    </section>
+
+    <div class="chatbox" id="chatbox">
+        <div class="chatbox-header">Chat with us!</div>
+        <div class="chatbox-messages" id="chatbox-messages">
+            <div class="question" onclick="sendMessage('hi')">Hi</div>
+            <hr>
+            <div class="question" onclick="sendMessage('how are you')">How are you?</div>
+            <hr>
+            <div class="question" onclick="sendMessage('what is your name')">What is your name?</div>
+            <hr>
+            <div class="question" onclick="sendMessage('start navigation')">Start Navigation</div>
+            <hr>
+            <div class="question" onclick="sendMessage('nearest restrooms')">Nearest Restrooms</div>
+            <hr>
+            <div class="question" onclick="sendMessage('find the main entrance')">Find the Main Entrance</div>
+            <hr>
+            <div class="question" onclick="sendMessage('landmarks near me')">Landmarks Near Me</div>
+            <hr>
+            <div class="question" onclick="sendMessage('time to reach my destination')">Time to Reach My Destination</div>
+            <hr>
+            <div class="question" onclick="sendMessage('shortcut to the library')">Shortcut to the Library</div>
+            <hr>
+            <div class="question" onclick="sendMessage('way to the cafeteria')">Way to the Cafeteria</div>
+            <hr>
+            <div class="question" onclick="sendMessage('help finding the conference room')">Help Finding the Conference Room</div>
+            <hr>
+            <div class="question" onclick="sendMessage('find a charging station')">Find a Charging Station</div>
+            <hr>
+            <div class="question" onclick="sendMessage('is there an elevator nearby')">Is There an Elevator Nearby</div>
+            <hr>
+            <div class="question" onclick="sendMessage('bye')">Bye</div>
+            <hr>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2024 AR-APSIT.ai All rights reserved.</p>
+    </footer>
+
+  <script>
+    document.getElementById('profile-btn').addEventListener('click', function () {
+        document.getElementById('sidebar').classList.add('open');
+      });
+      
+      document.getElementById('close-btn').addEventListener('click', function () {
+        document.getElementById('sidebar').classList.remove('open');
+      });
+
+    function toggleChatbot() {
+      const chatbox = document.getElementById("chatbox");
+      chatbox.style.display = chatbox.style.display === "none" ? "flex" : "none";
+    }
+
+    function scrollToFeatures() {
+      const featuresSection = document.getElementById("features");
+      featuresSection.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+
+      // Add a slight delay before adjusting the scroll to ensure scrollIntoView completes
+      setTimeout(() => {
+        // Adjust the scroll position by adding an offset (positive value scrolls down more)
+        window.scrollBy(0, 75); // Adjust 50 to a higher or lower number as needed
+      }, 500); // Delay to match the smooth scrolling duration
+    }
+
+    function toggleChatbot() {
+      const chatbox = document.getElementById("chatbox");
+      chatbox.style.display = chatbox.style.display === "none" ? "flex" : "none";
+    }
+    const express = require('express');
+
+    app.listen(3000, "127.0.0.1");
+    console.log(app);
+// e.g.
+    function getResponse(userMessage) {
+      const responses = {
+        "hi": "Hello! How can I help you today?",
+        "how are you": "I'm just a bot, but I'm doing well. How about you?",
+        "what is your name": "I'm a chatbot. I don't have a name, but you can call me Chatbot.",
+        "start navigation": "To start navigation, please enter your current location and your destination.",
+        "nearest restrooms": "Sure! Please allow me access to your current location, and I'll show you the nearest restrooms.",
+        "find the main entrance": "The main entrance is marked with a large blue arrow in the AR view. Just follow the arrow to reach the main entrance.",
+        "landmarks near me": "I can help with that! Let me access your location to show nearby landmarks on your AR view.",
+        "time to reach my destination": "Based on your current location and the destination, it should take approximately 10 minutes on foot.",
+        "shortcut to the library": "Yes, there is a shortcut. Follow the highlighted path in your AR view to take the quickest route to the library.",
+        "way to the cafeteria": "Sure! Follow the green path in your AR view to reach the cafeteria.",
+        "help finding the conference room": "No problem! Just enter the name or number of the conference room, and I will guide you there.",
+        "find a charging station": "There are charging stations located throughout the building. Let me show them in your AR view.",
+        "is there an elevator nearby": "Yes, there's an elevator close to you. Follow the yellow path in your AR view to reach it.",
+        "bye": "Goodbye! Have a great day!"
+      };
+
+      return responses[userMessage.toLowerCase()] || "Sorry, I don't understand that. Can you please rephrase?";
+    }
+
+    function sendMessage(userMessage) {
+      const messages = document.getElementById("chatbox-messages");
+
+      // Display the user's message
+      const userMessageElement = document.createElement("div");
+      userMessageElement.textContent = "You: " + userMessage;
+      messages.appendChild(userMessageElement);
+
+      // Get the bot's response
+      const botMessage = getResponse(userMessage);
+
+      // Display the bot's response
+      const botMessageElement = document.createElement("div");
+      botMessageElement.textContent = "Bot: " + botMessage;
+      messages.appendChild(botMessageElement);
+
+      // Scroll to the bottom of the messages
+      messages.scrollTop = messages.scrollHeight;
+
+      // Close the chat on "bye"
+      if (userMessage.toLowerCase() === 'bye') {
+        setTimeout(() => {
+          toggleChatbot(); // Close chatbox after a delay
+        }, 1000);
+      }
+    }
+  </script>
+</body>
+
+</html>
