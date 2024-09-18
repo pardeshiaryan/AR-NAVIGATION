@@ -1,13 +1,9 @@
+# encyclopedia/forms.py
+
 from django import forms
-from django.contrib.auth.models import User
-from .models import UserProfile
+from .models import Page
 
-class UserForm(forms.ModelForm):
+class NewPageForm(forms.ModelForm):
     class Meta:
-        model = User
-        fields = ['first_name', 'last_name', 'email']
-
-class UserProfileForm(forms.ModelForm):
-    class Meta:
-        model = UserProfile
-        fields = ['bio', 'location', 'birth_date']
+        model = Page
+        fields = ['title', 'content']
