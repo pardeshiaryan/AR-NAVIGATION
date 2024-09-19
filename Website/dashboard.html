@@ -103,8 +103,7 @@
       <hr>
       <div class="question" onclick="sendMessage('way to the cafeteria')">Way to the Cafeteria</div>
       <hr>
-      <div class="question" onclick="sendMessage('help finding the conference room')">Help Finding the Conference Room
-      </div>
+      <div class="question" onclick="sendMessage('help finding the conference room')">Help Finding the Conference Room</div>
       <hr>
       <div class="question" onclick="sendMessage('find a charging station')">Find a Charging Station</div>
       <hr>
@@ -127,19 +126,19 @@
         'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
       }
     })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Is Authenticated:', data.isAuthenticated);
-        if (data.isAuthenticated) {
-          document.getElementById('wiki-feature').style.display = 'block';
-        } else {
-          document.getElementById('wiki-feature').style.display = 'none';
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
+    .then(response => response.json())
+    .then(data => {
+      console.log('Is Authenticated:', data.isAuthenticated);
+      if (data.isAuthenticated) {
+        document.getElementById('wiki-feature').style.display = 'block';
+      } else {
         document.getElementById('wiki-feature').style.display = 'none';
-      });
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      document.getElementById('wiki-feature').style.display = 'none';
+    });
 
     function toggleChatbot() {
       const chatbox = document.getElementById("chatbox");

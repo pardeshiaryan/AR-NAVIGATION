@@ -1,57 +1,74 @@
 const express = require('express');
-const cors = require('cors');
-const jwt = require('jsonwebtoken');
+const session = require('express-session');
+const mysql = require('mysql2');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const app = express();
-const PORT = 3000;
-const SECRET_KEY = 'r9d4#1#*64qez8tr_m43k&q4a4(ju_+q#b*xy2s-35#+2oclpe'; // Ensure this matches Django SECRET_KEY
 
-// Middleware
 app.use(cors({
-    origin: 'http://localhost:3000', // Adjust this to match your frontend URL
-    methods: ['GET', 'POST'],
+    origin: ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://127.0.0.1:3001'],
     credentials: true
 }));
+
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-// In-memory user store for demonstration purposes
-const users = [
-    { username: 'user1', password: 'password1' }
-];
+app.use(session({
+    secret: 'yourSecretKey',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 86400000 } // 1 day
+}));
 
-// Authenticate and return a token
+const db = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'K@rtik2004',
+    database: 'arcredentials'
+});
+
+db.connect(err => {
+    if (err) throw err;
+    console.log('Connected to SQL database');
+});
+
 app.post('/login', (req, res) => {
-    const { username, password } = req.body;
-    const user = users.find(user => user.username === username && user.password === password);
+    const { MoodleId, Password } = req.body;
 
-    if (user) {
-        const token = jwt.sign({ username: user.username }, SECRET_KEY, { expiresIn: '1h' });
-        res.json({ token });
+    const query = 'SELECT * FROM users WHERE MoodleId = ? AND Password = SHA2(?, 256)';
+    db.query(query, [MoodleId, Password], (err, result) => {
+        if (err) {
+            console.error('Database query error:', err);
+            return res.json({ success: false, message: 'Internal server error' });
+        }
+        if (result.length > 0) {
+            const user = result[0];
+            req.session.authenticated = true;
+            req.session.user = user;
+            req.session.save(err => { // Ensure session is saved
+                if (err) {
+                    console.error('Session save error:', err);
+                    return res.json({ success: false, message: 'Session save error' });
+                }
+                console.log('Session data after login:', req.session);
+                res.json({ success: true, message: 'Login successful' });
+            });
+        } else {
+            res.json({ success: false, message: 'Invalid Moodle Id or Password' });
+        }
+    });
+});
+
+app.get('/dashboard', (req, res) => {
+    console.log('Session data:', req.session);
+    if (req.session.authenticated) {
+        return res.json({ isAuthenticated: true, user: req.session.user });
     } else {
-        res.status(401).json({ message: 'Invalid credentials' });
+        return res.json({ isAuthenticated: false });
     }
 });
 
-// Middleware to authenticate JWT
-function authenticateToken(req, res, next) {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-
-    if (token == null) return res.sendStatus(401);
-
-    jwt.verify(token, SECRET_KEY, (err, user) => {
-        if (err) return res.sendStatus(403);
-        req.user = user;
-        next();
-    });
-}
-
-// Example protected route
-app.get('/protected', authenticateToken, (req, res) => {
-    res.json({ message: 'This is a protected route', user: req.user });
-});
-
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+app.listen(3000, () => {
+    console.log('Server running on http://localhost:3000');
 });
