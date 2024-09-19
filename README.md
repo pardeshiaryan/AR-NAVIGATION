@@ -1,1 +1,1 @@
-This is my Sem 5 project on which i am working rn.This project is related to AR(Augmented Reality) which will navigate user to the destination using AR.Thos project can be used in a specific area.We are seeing forward to make it an product.Contributors are welcomed.
+This is my Sem 5 project on which i am working rn.This project is related to AR(Augmented Reality) which will navigate user to the destination using AR.This project can be used in a specific area.We are seeing forward to make it an product.Contributors are welcomed.
