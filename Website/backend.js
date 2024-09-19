@@ -8,8 +8,9 @@ const app = express();
 
 app.use(cors({
     origin: ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://127.0.0.1:3001'],
-    credentials: true
+    credentials: true // Allow cookies to be sent across different origins
 }));
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -60,14 +61,14 @@ app.post('/login', (req, res) => {
     });
 });
 
-app.get('/dashboard', (req, res) => {
-    console.log('Session data:', req.session);
+app.get('/check-auth', (req, res) => {
     if (req.session.authenticated) {
         return res.json({ isAuthenticated: true, user: req.session.user });
     } else {
         return res.json({ isAuthenticated: false });
     }
 });
+
 
 app.listen(3000, () => {
     console.log('Server running on http://localhost:3000');
